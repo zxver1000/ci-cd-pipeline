@@ -26,6 +26,7 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 		)
 
 		server.AddModule(&indexModule)
+		server.InitModules()
 
 		ginLambda = ginadapter.New(server.GetGinEngine())
 	}
