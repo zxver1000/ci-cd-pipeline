@@ -7,6 +7,12 @@ Study CI/CD Pipeline
 - 아래의 내용은 모두 본 Repository를 Fork한 후 수행합니다.
 - 작업을 모두 완료했다면, 본 Repository에 `닉네임/ci-cd-pipeline` 디렉토리를 만들어 Pull Request를 날립니다.
 
+## install terraform & awscli
+
+```
+brew install terraform@1.5 pre-commit awscli
+```
+
 ## CI/CD Pipeline
 
 - Git Actions를 이용해 Continuous Integration을 수행하고 AWS ECR에 Continuous Delivery를 수행합니다.
