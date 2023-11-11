@@ -11,6 +11,7 @@ Study CI/CD Pipeline
 ## CI/CD Pipeline
 
 - Git Actions를 이용해 Continuous Integration을 수행하고 AWS ECR에 Continuous Delivery를 수행합니다.
+  - 이 때, Go source는 binary로 빌드하여 Container Image를 만듭니다.
 - AWS ECR에 이미지가 갱신되면 AWS Lambda로 Deploy를 수행합니다.
 
 ## AWS Infrastructure
