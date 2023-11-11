@@ -1,4 +1,4 @@
-FROM golang:1.20  build
+FROM golang:1.20 as build
 
 WORKDIR /annuums
 # Copy dependencies list
