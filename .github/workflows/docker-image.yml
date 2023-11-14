@@ -34,7 +34,7 @@ jobs:
       id: build-image
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        IMAGE_TAG: ${{ github.sha }}
+        IMAGE_TAG: ${{ github.sha:0:10 }}
         function_name: hihi
       run: |
         # Build a docker container and
