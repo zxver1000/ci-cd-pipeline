@@ -54,5 +54,5 @@ jobs:
       env: 
         function_name: hihi
       run: |
-        aws lambda update-function-code --function-name $function_name --image-uri steps.build-image.outputs.image
+        aws lambda update-function-code --function-name $function_name --image-uri ${{ steps.build-image.outputs.image }}
       
