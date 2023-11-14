@@ -40,7 +40,7 @@ jobs:
       id: build-image
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        IMAGE_TAG: ${{steps.get-short-sha.outputs.id}}
+        IMAGE_TAG: ${{steps.get-short-sha.outputs.tag}}
         function_name: hihi
       run: |
         # Build a docker container and
