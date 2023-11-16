@@ -14,3 +14,9 @@ module "apigateway"{
       function_name=module.lambda.function_name
       invoke_arn=module.lambda.invoke_arn
 }
+module "oicd"{
+  source="./modules/oicd"
+  
+
+
+}
