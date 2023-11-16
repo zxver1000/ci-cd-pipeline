@@ -2,11 +2,13 @@ name: Docker Image CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "mains" ]
 env:
   AWS_REGION: ap-northeast-2   # set this to your preferred AWS region, e.g. us-west-1
   ECR_REPOSITORY: koko # set this to your Amazon ECR repository name
-
+permissions:
+  id-token: write   # This is required for requesting the JWT through OIDC
+  contents: read  
 
 jobs:
 
@@ -17,28 +19,29 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
 
-    - name: Setup Go
-      uses: actions/setup-go@v4
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v2
       with:
-        go-version: '1.20.x'
-
-    - name: Install dependency
-      working-directory: ./src
-      run: go mod tidy
-    - name: Build
-      working-directory: ./src
-      run: go build -v -o main .
-      
-    - name: Configure AWS credentials
+        terraform_version: 1.3.0
+          
+    - name: configure aws credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        role-to-assume: "ROLE ARN FROM TERRAFORM OUTPUT"
+        role-session-name: samplerolesession
         aws-region: ${{ env.AWS_REGION }}
 
-    - name: run test
-      working-directory: ./src
-      run: ./main
+    - name: Terraform Init
+      working-directory: ./src/terraform
+      id: init
+      run: terraform init
+        
+    - name: Terraform Plan
+      id: plan
+      working-directory: ./src/terraform
+      run: |
+        echo "## Terraform Plan" >> $GITHUB_STEP_SUMMARY
+        terraform plan -no-color >> $GITHUB_STEP_SUMMARY
     
     
 
