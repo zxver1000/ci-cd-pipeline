@@ -1,0 +1,75 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "mains" ]
+env:
+  AWS_REGION: ap-northeast-2   # set this to your preferred AWS region, e.g. us-west-1
+  ECR_REPOSITORY: koko # set this to your Amazon ECR repository name
+permissions:
+  id-token: write   # This is required for requesting the JWT through OIDC
+  contents: read  
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+    
+    - name: Setup Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: '1.20.x'
+
+    - name: Install dependency
+      working-directory: ./src
+      run: go mod tidy
+      
+    - name: Build Test
+      working-directory: ./src
+      run: go build -v -o main .
+      
+    - name: run test
+      working-directory: ./src
+      run: go test ./starter.go
+      
+          
+    - name: configure aws credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        role-to-assume: "arn:"
+        role-session-name: name
+        aws-region: ${{ env.AWS_REGION }}
+
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+
+    - name: Get short SHA
+      id: get-short-sha
+      run: |
+        tag=$(echo ${{github.sha}} | cut -c 1-7)
+        echo "::set-output name=tag::$tag"
+      
+    - name: Build,  and push image to Amazon ECR
+      id: build-image
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        IMAGE_TAG: ${{steps.get-short-sha.outputs.tag}}
+      run: |
+        # Build a docker container and
+        # push it to ECR so that it can
+        # be deployed to ECS.
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f ./deploy/Dockerfile .
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+        
+    - name: lambda image update
+      id: lambda-image-update
+      env: 
+        function_name: hihi
+      run: |
+        aws lambda update-function-code —function-name $function_name —image-uri ${{ steps.build-image.outputs.image }}
