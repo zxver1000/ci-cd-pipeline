@@ -32,7 +32,7 @@ jobs:
       uses: aws-actions/configure-aws-credentials@v1
       with:
         role-to-assume: "arn:aws:iam::455883942660:role/gha_oidc_assume_role"
-        role-session-name: gha_oidc_assume_role
+        role-session-name: gha_oidc_terraform_permissions
         aws-region: ${{ env.AWS_REGION }}
     - name: Login to Amazon ECR
       id: login-ecr
