@@ -27,7 +27,7 @@ resource "aws_iam_role" "gha_oidc_assume_role" {
             "token.actions.githubusercontent.com:aud": "sts.amazonaws.com",
           },
           "StringLike" : {
-            "token.actions.githubusercontent.com:sub" : ["repo:zxver1000/ci-cd-pipeline-study-2:*"]
+            "token.actions.githubusercontent.com:sub" : ["repo:zxver1000/*"]
           }
         }
       }
@@ -43,19 +43,42 @@ resource "aws_iam_role_policy" "gha_oidc_terraform_permissions" {
 
   # Terraform's "jsonencode" function converts a
   # Terraform expression result to valid JSON syntax.
+
+
+  # oidc 로 하는것 
+  # updateimage 이미지 업로드 -> 권한 oidc로주기 
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
       {
+          Action=[
+          "iam:CreateRole",
+          "iam:CreatePolicy",
+          "iam:DeleteRole",
+          "iam:PutRolePolicy",
+          "iam:DeleteRolePolicy",
+          "ecr:GetAuthorizationToken",
+
+       ],
+       Effect   = "Allow"
+      Resource="*"
+      }
+      ,{
         Action = [
-          "lambda:*",
-          "iam:*",
-          "ecr:*",
-          "apigateway:*"
+         "ecr:BatchGetImage",
+        "ecr:BatchCheckLayerAvailability",
+        "ecr:CompleteLayerUpload",
+        "ecr:DescribeImages",
+        "ecr:DescribeRepositories",
+        "ecr:GetDownloadUrlForLayer",
+        "ecr:InitiateLayerUpload",
+        "ecr:ListImages",
+        "ecr:PutImage",
+        "ecr:UploadLayerPart",
         ]
         Effect   = "Allow"
-        Resource = "*"
-      },
+        Resource = "arn:aws:ecr:ap-northeast-2:*"
+      }
     ]
   })
 }

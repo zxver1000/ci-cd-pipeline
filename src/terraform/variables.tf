@@ -11,3 +11,12 @@ variable "accountId"{
     type=string
 }
 
+variable "lambda_deploy_func_name"{
+    default="koko"
+}
+variable "lambda_deploy_iam_role_name"{
+    default="deploy_iam_role"
+}
+variable "deploy_apigateway_name"{
+   default="hihi"
+}

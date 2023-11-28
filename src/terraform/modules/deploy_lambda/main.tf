@@ -1,11 +1,11 @@
 
-resource "aws_iam_role" "iam_for_lambda" {
-  name               = "iam_for_lambda"
-  assume_role_policy = data.aws_iam_policy_document.assume_role.json
-}
+#resource "aws_iam_role" "iam_for_lambda" {
+#  name               = "iam_for_lambda"
+#  assume_role_policy = data.aws_iam_policy_document.assume_role.json
+#}
 
 resource "aws_lambda_function" "lambdas" {
- function_name = "hihi"
+ function_name = var.func_name
  #image_uri=data.external.check_digest.result.imagedigest
  image_uri="${data.external.check_repo.result.repository_url}@${data.external.check_digest.result.imagedigest}"
  package_type  = "Image"
@@ -19,7 +19,7 @@ resource "aws_lambda_function" "lambdas" {
 #  ]
 }
 resource "aws_iam_role" "role" {
-  name = "kokos"
+  name = var.iam_role_name
 
   assume_role_policy = jsonencode({
     Statement = [

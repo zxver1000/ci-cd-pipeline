@@ -1,5 +1,5 @@
 resource "aws_apigatewayv2_api" "gate" {
-  name          = "thankyou"
+  name          = var.apigw_name
   protocol_type = "HTTP"
 }
 
@@ -17,7 +17,7 @@ resource "aws_apigatewayv2_integration" "api_lambda" {
   integration_type = "AWS_PROXY"
 
   connection_type           = "INTERNET"
-  description               = "Lambda example"
+  description               = "Lambda Function Image"
   integration_method        = "POST"
   integration_uri           = var.invoke_arn  
 }
