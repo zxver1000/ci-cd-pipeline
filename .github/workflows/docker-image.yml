@@ -34,7 +34,6 @@ jobs:
         role-to-assume: "arn:aws:iam::455883942660:role/gha_oidc_assume_role"
         role-session-name: name
         aws-region: ${{ env.AWS_REGION }}
-
     - name: Login to Amazon ECR
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v1
