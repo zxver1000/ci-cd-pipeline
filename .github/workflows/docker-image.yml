@@ -8,7 +8,6 @@ env:
   ECR_REPOSITORY: kk # set this to your Amazon ECR repository name
 
 jobs:
-
   build:
     runs-on: ubuntu-latest
     steps:
