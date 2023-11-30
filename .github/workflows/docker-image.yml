@@ -5,13 +5,12 @@ on:
     branches: [ "default-image-deploy" ]
 env:
   AWS_REGION: ap-northeast-2   # set this to your preferred AWS region, e.g. us-west-1
-  ECR_REPOSITORY: koko # set this to your Amazon ECR repository name
+  ECR_REPOSITORY: kk # set this to your Amazon ECR repository name
 
 jobs:
 
   build:
     runs-on: ubuntu-latest
-
     steps:
     - name: Checkout
       uses: actions/checkout@v3
