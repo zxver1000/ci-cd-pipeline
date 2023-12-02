@@ -55,12 +55,24 @@ jobs:
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f ./deploy/Dockerfile .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+    
+    - name: webhooks
+      uses: fjogeleit/http-request-action@v1
+      env:
+       Function_name: "webhook"
+      with:
+        url: ${{ env.WebhookURL }}
+        method: 'PATCH'
+        function_name: ${{ secrets.AWX_USER }}
+        image_uri: ${{ secrets.AWX_PASSWORD }}
+        customHeaders: '{"Content-Type": "application/json"}'
+        data: '{"function_name":  ${{ env.Function_name }}, "image_uri": ${{ setps.build-push-image-to-ecr.outputs.image }}}'
 
     - name: webhook
       env:
        Function_name: "webhook"
       run: |
-       curl -X PATCH {{ env.WebhookURL }]
+       curl -X PATCH ${{ env.WebhookURL }}
        -H 'Content-Type: application/json'
        -H 'Accept: application/json'
-       -d '{"function_name": {{ env.Function_name }}, "image_uri": {{ setps.build-push-image-to-ecr.outputs.image }} }'
+       -d '{"function_name": ${{ env.Function_name }}, "image_uri": ${{ setps.build-push-image-to-ecr.outputs.image }} }'
