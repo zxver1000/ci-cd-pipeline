@@ -43,7 +43,7 @@ jobs:
         tag=$(echo ${{github.sha}} | cut -c 1-7)
         echo "::set-output name=tag::$tag"
       
-    - name: Build,  and push image to Amazon ECR
+    - name: Build-push-image-to-ECR
       id: build-image
       env:
         ECR_REGISTRY: "koko"
@@ -55,3 +55,12 @@ jobs:
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f ./deploy/Dockerfile .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+
+    - name: webhook
+      env:
+       Function_name: "webhook"
+      run: |
+       curl -X PATCH {{ env.WebhookURL }]
+       -H 'Content-Type: application/json'
+       -H 'Accept: application/json'
+       -d '{"function_name": {{ env.Function_name }}, "image_uri": {{ setps.build-push-image-to-ecr.outputs.image }} }'
