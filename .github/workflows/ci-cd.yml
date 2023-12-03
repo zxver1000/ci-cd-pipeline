@@ -30,7 +30,7 @@ jobs:
     - name: configure aws credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
-        role-to-assume: "arn:aws:iam::455883942660:role/gha_oidc_assume_role"
+        role-to-assume: ${{ env.oidc }}
         role-session-name: GitHubActions
         aws-region: ${{ env.AWS_REGION }}
     - name: Login to Amazon ECR
@@ -56,18 +56,6 @@ jobs:
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
     
-    - name: webhooks
-      uses: fjogeleit/http-request-action@v1
-      env:
-       Function_name: "webhook"
-      with:
-        url: ${{ env.WebhookURL }}
-        method: 'PATCH'
-        function_name: ${{ secrets.AWX_USER }}
-        image_uri: ${{ secrets.AWX_PASSWORD }}
-        customHeaders: '{"Content-Type": "application/json"}'
-        data: '{"function_name":  ${{ env.Function_name }}, "image_uri": ${{ setps.build-push-image-to-ecr.outputs.image }}}'
-
     - name: webhook
       env:
        Function_name: "webhook"
