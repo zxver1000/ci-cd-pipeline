@@ -25,7 +25,7 @@ jobs:
 
     - name: Install dependency & Build Test
       working-directory: ./src
-      run: go mod tidy || go build 
+      run: go mod tidy && go build 
           
     - name: configure aws credentials
       uses: aws-actions/configure-aws-credentials@v1
