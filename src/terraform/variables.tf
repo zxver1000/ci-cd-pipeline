@@ -6,10 +6,6 @@ variable "region"{
     default="ap-northeast-2"
     type=string
 }
-variable "accountId"{
-    default=455883942660
-    type=string
-}
 
 variable "lambda_deploy_func_name"{
     default="koko"
