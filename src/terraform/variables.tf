@@ -1,5 +1,5 @@
 variable "repository_name"{
-   default="koko"
+   default="kk"
     type=string
 }
 variable "region"{
@@ -19,4 +19,13 @@ variable "lambda_deploy_iam_role_name"{
 }
 variable "deploy_apigateway_name"{
    default="hihi"
+}
+variable "lambda_webhook_func_name"{
+    default="webhook"
+}
+variable "lambda_webhook_iam_role_name"{
+    default="webhook_iam_role"
+}
+variable "webhook_apigateway_name"{
+   default="webhook"
 }

@@ -8,18 +8,43 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func NewIndexHandler() *solanum.SolaService {
-	return &solanum.SolaService{
+func NewIndexHandler() []*solanum.SolaService {
+	return []*solanum.SolaService{
+		{
 		Uri:        "/",
 		Method:     http.MethodGet,
 		Handler:    indexHandler,
-		Middleware: indexMiddleware,
+		Middleware: nil,
+		},
+		{
+			Uri:        "/",
+			Method:     http.MethodPost,
+			Handler:    indexHandler2,
+			Middleware: nil,
+		},
+		{
+			Uri:        "/",
+			Method:     http.MethodPatch,
+			Handler:    indexHandler3,
+			Middleware: nil,
+			},
+			
+			
+
 	}
 }
 
 func indexHandler(ctx *gin.Context) {
-	ctx.JSON(200, "Hello, World! Welcome to CI-CD-Pipeline")
+	ctx.JSON(200, gin.H{"code" : http.StatusOK,"content": "Health Check OK.Get"})
 }
+func indexHandler2(ctx *gin.Context) {
+	ctx.JSON(200, gin.H{"code" : http.StatusOK,"content": "Health Check OK. Post"})
+}
+
+func indexHandler3(ctx *gin.Context) {
+	ctx.JSON(200, gin.H{"code" : http.StatusOK,"content": "Health Check OK.Patch"})
+}
+
 
 func indexMiddleware(ctx *gin.Context) {
 	log.Println("Hello Index Middleware")

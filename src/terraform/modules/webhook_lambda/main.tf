@@ -21,6 +21,7 @@ resource "aws_lambda_function" "lambdas" {
 }
 resource "aws_iam_role" "role" {
   name = var.iam_role_name
+  managed_policy_arns=[aws_iam_policy.UpdatelambdaPolicy.arn]
 
   assume_role_policy = jsonencode({
     Statement = [
@@ -39,4 +40,24 @@ resource "aws_iam_role" "role" {
   )
 }
 
+# Action 제한 
+# lambda -> updateimage
+# ecr-> image get필요
 
+resource "aws_iam_policy" "UpdatelambdaPolicy" {
+  name = "update-Lambda-policy"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action   = [
+          "lambda:*",
+          "ecr:*"
+          ]
+        Effect   = "Allow"
+        Resource = "*"
+      },
+    ]
+  })
+}

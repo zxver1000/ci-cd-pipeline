@@ -1,2 +1,4 @@
-variable "repository_name"{}
+variable "repository_name"{
+default="kk"
+}
 

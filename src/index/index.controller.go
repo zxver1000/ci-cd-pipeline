@@ -18,7 +18,7 @@ func NewIndexController() (*solanum.SolaController, error) {
 func addHandlers() {
 	handlers := NewIndexHandler()
 
-	indexController.AddHandler(handlers)
+	indexController.AddHandler(handlers...)
 }
 
 //* Middleware
